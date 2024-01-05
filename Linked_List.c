@@ -1,4 +1,6 @@
 #include <stddef.h>
+#include <stdio.h>
+#define AIV_LIST(x) &(x.list_item)
 /*
 esercizi
     implementare la rimozione (fatto)
@@ -37,7 +39,7 @@ struct aiv_list_item* aiv_list_get_tail(struct aiv_list_item* head)
     return last_item;
 }
 
-struct aiv_list_item* aiv_list_get_append(struct aiv_list_item** head, struct aiv_list_item* item)
+struct aiv_list_item* aiv_list_append(struct aiv_list_item** head, struct aiv_list_item* item)
 {
     struct aiv_list_item* tail = aiv_list_get_tail(*head);
 
@@ -151,48 +153,6 @@ struct aiv_list_item* aiv_list_reverse(struct aiv_list_item** head)
         temp_next_item = temp_next_swapper;
         //devo fare qualcosa qua
 
-        //lista al momento  2->p0(1)->null
-        //temp_next_item = 3->p3->null = 3->4->null
-        //temp_curr_item = 2->1->null = 2->p0->null
-
-        // // temp_next_swapper = 4->null
-        // //mi salvo il valore del next di temp next item, così da poterlo far diventare il prossimo temp next item
-        // struct aiv_list_item* temp_next_swapper = temp_next_item->next;
-
-        // //4->null diventa 2->1->null = 2->p0->null giusto
-        // //assegno al next di temp next item il curr item, così da fare l'effettivo reverse
-        // temp_next_item->next = temp_curr_item;
-
-        // //2->1->null diventa 3->2->1->null = 3->p1->p0
-        // //assegno all curr il valore del prossimo valore da controllare
-        // temp_curr_item = temp_next_item;
-
-        // //3->2->1->null = 2->p0 diventa 4->null
-        // temp_next_item= temp_next_swapper;
-
-
-        // //lista al momento 3->p0(2)->p0(1)->null
-        // //temp_next_item = 4->null
-        // //temp_curr_item = 3->p1->p0
-
-        // // temp_next_swapper = null
-        // //mi salvo il valore del next di temp next item, così da poterlo far diventare il prossimo temp next item
-        // struct aiv_list_item* temp_next_swapper = temp_next_item->next;
-
-        // //null diventa 2->1->null = 3->p1->p0->null giusto
-        // //assegno al next di temp next item il curr item, così da fare l'effettivo reverse
-        // temp_next_item->next = temp_curr_item;
-
-        // //3->p1->p0 diventa 4->3->2->1->null = 4->3->p1->p0
-        // //assegno all curr il valore del prossimo valore da controllare
-        // temp_curr_item = temp_next_item;
-
-        // //4->3->2->1->null = null
-        // temp_next_item= temp_next_swapper;
-
-        //temp_next_item->next =
-
-        //temp_curr_item = temp_next_item->next;
     }
     temp_curr_item->count = (*head)->count;
     return temp_curr_item;
@@ -204,9 +164,49 @@ unsigned int aiv_list_lenght(struct aiv_list_item* head)
     return head->count;
 }
 
+void aiv_list_print(struct aiv_int_item* head) 
+{
+    if(head == NULL)
+    {
+        printf("The list is empty");
+        return;
+    }
+
+    struct aiv_int_item* curr_item = head;
+    struct aiv_int_item* next_item = curr_item->list_item.next;
+
+    do
+    {
+        printf("%d\n",curr_item->value);
+        curr_item = next_item;
+        next_item = curr_item->list_item.next;
+    } while (curr_item);
+};
+
+
 
 int main(int arg, char** argv)
 {
+    struct aiv_list_item *head = NULL;
 
+    printf("\nAdding Value in List\n");
+    struct aiv_int_item int_item1;
+    struct aiv_int_item int_item2;
+    struct aiv_int_item int_item3;
+    struct aiv_int_item int_item4;
+    int_item1.value = 100;
+    int_item2.value = 101;
+    int_item3.value = 102;
+    int_item4.value = 103;
+    aiv_list_append(&head, AIV_LIST(int_item1));
+    aiv_list_append(&head, AIV_LIST(int_item2));
+    aiv_list_append(&head, AIV_LIST(int_item3));
+    aiv_list_append(&head, AIV_LIST(int_item4));
 
+    //aiv_list_print((struct aiv_int_item *)head);
+
+    head = aiv_list_reverse(&head);
+    aiv_list_print((struct aiv_int_item *)head);
+
+    return 0;
 }
