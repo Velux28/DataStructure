@@ -1,13 +1,14 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
+//#include "Linked_List.c"
 #define HASHMAP_SIZE 64
 #define HASHMAP_SIZE_LIST 1
 
 /*esercizi
-    ricerca
-    rimozione
-    chiave univoca
+    ricerca fatto
+    rimozione fatto 
+    chiave univoca fatto
     refactor utilizzando le linked list (facoltativo)
     
   esercizi dizionari

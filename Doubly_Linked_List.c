@@ -1,8 +1,11 @@
 #include <stddef.h>
+#include <stdio.h>
 /*
 esercizi
-    implementare la rimozione 
-    inserimento prima e dopo un elemento
+    sono da implementare
+    implementare la rimozione forse fatto
+    inserimento prima di un elemento da implementare
+    inserimento dopo di un elemento da implementare
     shuffle (facoltativo)
 */
 
@@ -46,10 +49,12 @@ struct aiv_list_item* aiv_list_get_append(struct aiv_list_item** head, struct ai
     {
         *head = item;
         (*head)->count = 1;
+        item->prev = NULL;
     }
     else
     {
         tail->next = item;
+        item->prev = tail;
         (*head)->count++;
     }
 
@@ -60,6 +65,55 @@ struct aiv_list_item* aiv_list_get_append(struct aiv_list_item** head, struct ai
     item->next = NULL;
     return item;
 }
+struct aiv_list_item* aiv_list_get_append_after(struct aiv_list_item** head, struct aiv_list_item* item)
+{
+    struct aiv_list_item* tail = aiv_list_get_tail(*head);
+
+    if(!tail)
+    {
+        *head = item;
+        (*head)->count = 1;
+        item->prev = NULL;
+    }
+    else
+    {
+        tail->next = item;
+        item->prev = tail;
+        (*head)->count++;
+    }
+
+    // if(!(*head))
+    // {
+    //     *head = item;
+    // }
+    item->next = NULL;
+    return item
+}
+struct aiv_list_item* aiv_list_get_append_before(struct aiv_list_item** head, struct aiv_list_item* item)
+{
+    struct aiv_list_item* tail = aiv_list_get_tail(*head);
+
+    if(!tail)
+    {
+        *head = item;
+        (*head)->count = 1;
+        item->prev = NULL;
+    }
+    else
+    {
+        tail->next = item;
+        item->prev = tail;
+        (*head)->count++;
+    }
+
+    // if(!(*head))
+    // {
+    //     *head = item;
+    // }
+    item->next = NULL;
+    return item
+}
+
 
 struct aiv_list_item* aiv_list_pop(struct aiv_list_item** head)
 {
@@ -79,108 +133,53 @@ struct aiv_list_item* aiv_list_pop(struct aiv_list_item** head)
     return current_head;
 }
 
-_Bool aiv_list_remove_index(struct aiv_list_item** head, const unsigned int index)
+struct aiv_list_item* aiv_list_remove_index(struct aiv_list_item** head, const unsigned int index)
 {
     if(!(*head))
     {
-        return 0;
+        printf("The list is empty");
+        return NULL;
     }
 
     if(index == 1)
     {
-        aiv_list_pop(head);
-        return 1;
+        printf("Head Pop");
+        return aiv_list_pop(head);
     }
 
-    if((*head)->count < index && index <= 0)
+    if((*head)->count > index && index <= 0)
     {
-        return 0;
+        
+        printf("The index is out of range");
+        return NULL;
     }
 
-    struct aiv_list_item* curr_item = *head;
-    unsigned int curr_counter = 1;
+    struct aiv_list_item* curr_head = *head;
+    struct aiv_list_item* curr_item = curr_head->next;
+    struct aiv_list_item* next;
+
+    unsigned int curr_counter = 2;
     
-    while(curr_counter == index)
+    do
     {
-        if(curr_counter == index - 1)
+        if(curr_counter == index)
         {
-            curr_item->next = curr_item->next->next;
+            next = curr_item->next->next;
+            next->prev = curr_item;
+            curr_item->next = next;
             (*head)->count--;
-            return 1;
+            printf("Item Remove");
+            return curr_head;
         }
         curr_item = curr_item->next;
         curr_counter++;
-    }
-
-    return 0;
+    }while(curr_counter == index);
+    printf("Item not found");
+    return NULL;
 }
-
-struct aiv_list_item* aiv_list_revert(struct aiv_list_item** head)
+struct aiv_list_item* aiv_list_Shuffle(struct aiv_list_item** head)
 {
-    //1->2->3->4->null
-    //4->3->2->1->null
-
-
-    //temp_curr_item = 1->p1
-    //elemento che sto spostando 
-    struct aiv_list_item* temp_curr_item = *head;
-
-    //temp_next_item = 2->p2 = 2->3
-    //il next del curr che poi diventerà il precedente, devo solo cambiare il next e riassegnarlo 
-    struct aiv_list_item* temp_next_item = temp_curr_item->next;
-
-    //temp_curr_item = 1->null
-    //rendo nullo il next del current 
-    temp_curr_item->next = NULL;
-    //2->p0
-
-    while (temp_next_item)
-    {
-        // temp_next_swapper = 3->p3 = 3->4
-        //mi salvo il valore del next di temp next item, così da poterlo far diventare il prossimo temp next item
-        struct aiv_list_item* temp_next_swapper = temp_next_item->next;
-
-        //2->p2 = 2->3 diventa 2->p0 = 2->1->null giusto
-        //assegno al next di temp next item il curr item, così da fare l'effettivo reverse
-        temp_next_item->next = temp_curr_item;
-
-        //1->null diventa 2->1->null = 2->p0
-        //assegno all curr il valore del prossimo valore da controllare
-        temp_curr_item = temp_next_item;
-
-        //2->1->null = 2->p0 diventa 3->p3->null = 3->4->null
-        temp_next_item = temp_next_swapper;
-        //devo fare qualcosa qua
-
-        //1->null 2->p0(1)->null
-        //temp_next_item = 3->p3->null = 3->4->null
-        //temp_curr_item = 2->1->null = 2->p0->null
-
-        // temp_next_swapper = 4->null
-        //mi salvo il valore del next di temp next item, così da poterlo far diventare il prossimo temp next item
-        struct aiv_list_item* temp_next_swapper = temp_next_item->next;
-
-        //4->null diventa 2->1->null = 2->p0->null giusto
-        //assegno al next di temp next item il curr item, così da fare l'effettivo reverse
-        temp_next_item->next = temp_curr_item;
-
-        //1->null diventa 2->1->null = 2->p0
-        //assegno all curr il valore del prossimo valore da controllare
-        temp_curr_item = temp_next_item;
-
-        //2->1->null = 2->p0 diventa 3->p3->null = 3->4->null
-        temp_next_item= temp_next_swapper;
-
-
-        //1->null = 3->p2
-        //temp_curr_item = temp_next_swapper;
-
-        //temp_next_item->next =
-
-        //temp_curr_item = temp_next_item->next;
-    }
-    
-
+    paolo
 }
 
 unsigned int aiv_list_lenght(struct aiv_list_item* head)

@@ -6,6 +6,7 @@ esercizi
     implementare la rimozione (fatto)
     riddurre i casting (29/11/23 1:00-1:20)
     invertire la list 123->321 (da testare) (facoltativo)
+    controllare come implementato pop
 */
 
 struct aiv_list_item 
@@ -69,51 +70,57 @@ struct aiv_list_item* aiv_list_pop(struct aiv_list_item** head)
         return NULL;
     }
 
-    struct aiv_list_item* current_head = *head;
+    struct aiv_list_item* current_head = (*head)->next;
     const unsigned int current_counter = current_head->count;
+
     if(*head)
     {
         (*head)->count = current_counter - 1;
     }
 
-    current_head->next = NULL;
+    head = NULL;
     return current_head;
 }
 
-_Bool aiv_list_remove_index(struct aiv_list_item** head, const unsigned int index)
+struct aiv_list_item* aiv_list_remove_index(struct aiv_list_item** head, const unsigned int index)
 {
     if(!(*head))
     {
-        return 0;
+        printf("The list is empty");
+        return NULL;
     }
 
     if(index == 1)
     {
-        aiv_list_pop(head);
-        return 1;
+        printf("Head Pop");
+        return aiv_list_pop(head);
     }
 
-    if((*head)->count < index && index <= 0)
+    if((*head)->count > index && index <= 0)
     {
-        return 0;
+        
+        printf("The index is out of range");
+        return NULL;
     }
 
-    struct aiv_list_item* curr_item = *head;
-    unsigned int curr_counter = 1;
+    struct aiv_list_item* curr_head = *head;
+    struct aiv_list_item* curr_item = curr_head->next;
+    unsigned int curr_counter = 2;
     
-    while(curr_counter == index)
+    do
     {
-        if(curr_counter == index - 1)
+        if(curr_counter == index)
         {
             curr_item->next = curr_item->next->next;
             (*head)->count--;
-            return 1;
+            printf("Item Remove");
+            return curr_head;
         }
         curr_item = curr_item->next;
         curr_counter++;
-    }
-
-    return 0;
+    }while(curr_counter == index);
+    printf("Item not found");
+    return NULL;
 }
 
 struct aiv_list_item* aiv_list_reverse(struct aiv_list_item** head)
@@ -178,9 +185,12 @@ void aiv_list_print(struct aiv_int_item* head)
     do
     {
         printf("%d\n",curr_item->value);
+        //printf("ciccio");
         curr_item = next_item;
         next_item = curr_item->list_item.next;
     } while (curr_item);
+
+    return;
 };
 
 
@@ -202,10 +212,14 @@ int main(int arg, char** argv)
     aiv_list_append(&head, AIV_LIST(int_item2));
     aiv_list_append(&head, AIV_LIST(int_item3));
     aiv_list_append(&head, AIV_LIST(int_item4));
+    aiv_list_pop()
 
     //aiv_list_print((struct aiv_int_item *)head);
 
     head = aiv_list_reverse(&head);
+    //aiv_list_print((struct aiv_int_item *)head);
+
+    head = aiv_list_remove_index(&head, 1);
     aiv_list_print((struct aiv_int_item *)head);
 
     return 0;
