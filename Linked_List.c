@@ -96,7 +96,7 @@ struct aiv_list_item* aiv_list_remove_index(struct aiv_list_item** head, const u
         return aiv_list_pop(head);
     }
 
-    if((*head)->count > index && index <= 0)
+    if((*head)->count < index || index <= 0)
     {
         
         printf("The index is out of range");
@@ -184,7 +184,8 @@ void aiv_list_print(struct aiv_int_item* head)
 
     do
     {
-        printf("%d\n",curr_item->value);
+        if(curr_item->value)
+            printf("%d\n",curr_item->value);
         //printf("ciccio");
         curr_item = next_item;
         next_item = curr_item->list_item.next;
@@ -212,12 +213,12 @@ int main(int arg, char** argv)
     aiv_list_append(&head, AIV_LIST(int_item2));
     aiv_list_append(&head, AIV_LIST(int_item3));
     aiv_list_append(&head, AIV_LIST(int_item4));
-    aiv_list_pop()
+    //aiv_list_pop();
 
-    //aiv_list_print((struct aiv_int_item *)head);
+    aiv_list_print((struct aiv_int_item *)head);
 
     head = aiv_list_reverse(&head);
-    //aiv_list_print((struct aiv_int_item *)head);
+    aiv_list_print((struct aiv_int_item *)head);
 
     head = aiv_list_remove_index(&head, 1);
     aiv_list_print((struct aiv_int_item *)head);

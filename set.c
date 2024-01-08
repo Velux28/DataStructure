@@ -6,12 +6,6 @@
 #define HASHMAP_SIZE_LIST 1
 
 /*esercizi
-    ricerca fatto
-    rimozione fatto 
-    chiave univoca fatto
-    refactor utilizzando le linked list (facoltativo)
-    
-  esercizi dizionari
     implementare chiave e valore
     tenere conto delle collisioni e espandere quando sono troppe (facoltativo)
 */
