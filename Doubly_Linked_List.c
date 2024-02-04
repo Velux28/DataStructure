@@ -1,5 +1,7 @@
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #define AIV_LIST(x) &(x.list_item)
 /*
 esercizi
@@ -67,6 +69,10 @@ struct aiv_list_item* aiv_list_append(struct aiv_list_item** head, struct aiv_li
     //     *head = item;
     // }
     item->next = NULL;
+    
+        //printf("count %d", (*head)->count);
+
+    printf("appended\n");
     return item;
 }
 
@@ -154,10 +160,10 @@ struct aiv_list_item* aiv_list_remove_index(struct aiv_list_item** head, const u
     if(index == (*head)->count)
     {
         struct aiv_list_item* tail;
-        tail = aiv_list_get_tail(head);
+        tail = aiv_list_get_tail(*head);
         tail = NULL;
         printf("Tail remove\n");
-        return head;
+        return *head;
     }
 
     if((*head)->count < index || index <= 0)
@@ -191,13 +197,67 @@ struct aiv_list_item* aiv_list_remove_index(struct aiv_list_item** head, const u
     printf("Item not found\n");
     return NULL;
 }
-// struct aiv_list_item* aiv_list_Shuffle(struct aiv_list_item** head)
-// {
-// }
 
 unsigned int aiv_list_lenght(struct aiv_list_item* head)
 {
     return head->count;
+}
+
+struct aiv_list_item* aiv_list_Shuffle(struct aiv_list_item** head)
+{
+    struct aiv_list_item* curr_tail= aiv_list_get_tail(*head);
+    struct aiv_list_item* item_to_swap = *head;
+
+    unsigned int count = aiv_list_lenght(*head);
+    srand(time(NULL));
+    int r = (rand()%(*head)->count)+1;
+    for(int i = 0; i < count; i++)
+    {
+        printf("rand %d, count %d\n", r, count);
+        for(int j = 1; j <= count; j++)
+        {
+            if(r==1)
+            {
+                struct aiv_list_item* item_to_swap_next = item_to_swap->next;
+                struct aiv_list_item* curr_tail_prev = curr_tail->prev;
+                curr_tail->prev = NULL;
+                item_to_swap_next->prev = curr_tail;
+                curr_tail->count = count;
+                item_to_swap->next = NULL;
+                curr_tail_prev = item_to_swap->prev;
+                *head = curr_tail;
+                printf("Swap head\n");
+                break;
+                
+            }
+            if(r==count)
+            {
+                printf("tail swap\n");
+                break;
+            }
+            if(j==r)
+            {
+                struct aiv_list_item* item_to_swap_next = item_to_swap->next;
+                struct aiv_list_item* curr_tail_prev = curr_tail->prev;
+                struct aiv_list_item* item_to_swap_prev = item_to_swap->prev;
+
+                curr_tail_prev->next = item_to_swap;
+                curr_tail->next = item_to_swap_prev;
+                item_to_swap_next->prev = curr_tail;
+                item_to_swap_prev->next = curr_tail;
+                item_to_swap->next = NULL;
+
+                printf("Swap n %d\n", j);
+                
+                break;
+            }
+            item_to_swap = item_to_swap->next;
+        }
+        printf("next swap\n");
+        item_to_swap = *head;
+        curr_tail= aiv_list_get_tail(*head);
+        r = (rand()%(*head)->count)+1;
+    }
 }
 
 void aiv_list_print(struct aiv_int_item* head) 
@@ -211,14 +271,16 @@ void aiv_list_print(struct aiv_int_item* head)
     struct aiv_int_item* curr_item = head;
     struct aiv_int_item* next_item = curr_item->list_item.next;
 
-    do
+    
+    while (next_item)
     {
+        printf("ciccio");
         if(curr_item->value)
             printf("%d\n",curr_item->value);
         curr_item = next_item;
         next_item = curr_item->list_item.next;
-    } while (curr_item);
-    printf("Fine stampa");
+    } 
+
     return;
 };
 
@@ -234,6 +296,11 @@ int main(int arg, char** argv)
     struct aiv_int_item int_item5;
     struct aiv_int_item int_item6;
     struct aiv_int_item int_item7;
+    struct aiv_int_item int_item8;
+    struct aiv_int_item int_item9;
+    struct aiv_int_item int_item10;
+    struct aiv_int_item int_item11;
+    struct aiv_int_item int_item12;
 
     int_item1.value = 100;
     int_item2.value = 101;
@@ -242,15 +309,25 @@ int main(int arg, char** argv)
     int_item5.value = 104;
     int_item6.value = 105;
     int_item7.value = 106;
+    int_item8.value = 107;
+    int_item9.value = 108;
+    int_item10.value = 109;
     
     aiv_list_append(&head, AIV_LIST(int_item1));
     aiv_list_append(&head, AIV_LIST(int_item2));
     aiv_list_append(&head, AIV_LIST(int_item3));
     aiv_list_append(&head, AIV_LIST(int_item4));
-    aiv_list_remove_index(&head, 4);
 
     aiv_list_append_after(&head, AIV_LIST(int_item1), AIV_LIST(int_item5));
     aiv_list_append_before(&head, AIV_LIST(int_item5), AIV_LIST(int_item6));
     aiv_list_append_after(&head, AIV_LIST(int_item2), AIV_LIST(int_item7));
+    
+
+    aiv_list_append(&head, AIV_LIST(int_item7));
+    aiv_list_append(&head, AIV_LIST(int_item8));
+    aiv_list_append(&head, AIV_LIST(int_item9));
+    aiv_list_append(&head, AIV_LIST(int_item10));
+    //aiv_list_remove_index(&head, 4);
     aiv_list_print((struct aiv_int_item *)head);
+    //aiv_list_Shuffle(&head);
 }

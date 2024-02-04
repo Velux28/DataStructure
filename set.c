@@ -5,15 +5,11 @@
 #define HASHMAP_SIZE 64
 #define HASHMAP_SIZE_LIST 1
 
-/*esercizi
-    implementare chiave e valore
-    tenere conto delle collisioni e espandere quando sono troppe (facoltativo)
-*/
-
 struct aiv_set_item
 {
     const char *key;
     size_t key_len;
+    struct aiv_set_item* next;
 };
 
 struct aiv_set
